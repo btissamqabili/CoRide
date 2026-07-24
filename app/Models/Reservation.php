@@ -22,4 +22,11 @@ class Reservation extends Model
     {
         return $this->belongsTo(User::class, 'passager_id');
     }
+    protected function casts(): array
+{
+    return [
+        'compatibility' => CompatibilityCast::class,
+    ];
 }
+}
+

@@ -16,7 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Rediriger vers /login sur les requêtes Web de navigateur au lieu de renvoyer du JSON brut
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
+            fn (Request $request) => $request->expectsJson()
         );
     })->create();

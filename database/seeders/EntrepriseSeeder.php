@@ -9,19 +9,16 @@ class EntrepriseSeeder extends Seeder
 {
     public function run(): void
     {
-        Entreprise::create([
-            'nom' => 'MobiliTech',
-            'email' => 'contact@mobilitech.com',
-        ]);
+        $entreprises = [
+            'MobiliTech',
+            'NextBuild',
+            'Atlas Digital',
+            'GreenLogix',
+            'Kandia Solutions',
+        ];
 
-        Entreprise::create([
-            'nom' => 'TechCorp',
-            'email' => 'contact@techcorp.com',
-        ]);
-
-        Entreprise::create([
-            'nom' => 'Digital Solutions',
-            'email' => 'contact@digitalsolutions.com',
-        ]);
+        foreach ($entreprises as $nom) {
+            Entreprise::firstOrCreate(['nom' => $nom]);
+        }
     }
 }
