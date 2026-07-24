@@ -151,3 +151,110 @@
 </div>
 
 @endsection
+@extends('layouts.app')
+
+@section('content')
+
+<div class="max-w-7xl mx-auto">
+
+    <h2 class="text-2xl font-bold mb-6">
+        Tableau de bord CoRide
+    </h2>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+            <h3 class="text-gray-600">
+                Trajets
+            </h3>
+
+            <p class="text-3xl font-bold text-blue-600">
+                {{ $nbTrajets }}
+            </p>
+        </div>
+
+
+
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+            <h3 class="text-gray-600">
+                Réservations
+            </h3>
+
+            <p class="text-3xl font-bold text-green-600">
+                {{ $nbReservations }}
+            </p>
+        </div>
+
+
+
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+            <h3 class="text-gray-600">
+                Employés
+            </h3>
+
+            <p class="text-3xl font-bold text-yellow-600">
+                {{ $nbEmployes }}
+            </p>
+        </div>
+
+
+
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+            <h3 class="text-gray-600">
+                Entreprises
+            </h3>
+
+            <p class="text-3xl font-bold text-red-600">
+                {{ $nbEntreprises }}
+            </p>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="bg-white shadow rounded-lg mt-8 p-6">
+
+        <h3 class="text-lg font-semibold mb-4">
+            Accès rapide
+        </h3>
+
+
+        <div class="flex flex-wrap gap-4">
+
+
+            <a href="{{ route('trajets.index') }}"
+               class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Voir les trajets
+            </a>
+
+
+            <a href="{{ route('trajets.create') }}"
+               class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                Publier un trajet
+            </a>
+
+
+            <a href="{{ route('reservations.index') }}"
+               class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                Mes réservations
+            </a>
+
+
+            <a href="{{ route('profile.edit') }}"
+               class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                Mon profil
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+@endsection

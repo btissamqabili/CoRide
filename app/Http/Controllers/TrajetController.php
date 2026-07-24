@@ -76,10 +76,20 @@ class TrajetController extends Controller
      * Supprimer un trajet.
      */
     public function destroy(Trajet $trajet)
-    {
-        $trajet->delete();
+{
+    // Vérifier s'il existe des réservations confirmées
+    if ($trajet->reservations()
+        ->where('statut', 'confirmee')
+        ->exists()) {
 
         return redirect()->route('trajets.index')
-            ->with('success', 'Trajet supprimé avec succès.');
+            ->with('error', 'Impossible de supprimer ce trajet car il possède des réservations confirmées.');
     }
+
+    // Supprimer le trajet
+    $trajet->delete();
+
+    return redirect()->route('trajets.index')
+        ->with('success', 'Trajet supprimé avec succès.');
+}
 }

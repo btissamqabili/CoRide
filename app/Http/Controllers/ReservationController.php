@@ -35,6 +35,32 @@ class ReservationController extends Controller
      */
     public function store(StoreReservationRequest $request)
     {
+        // Vérifier que le trajet existe
+        $trajet = Trajet::findOrFail($request->trajet_id);
+
+        // Vérifier que l'utilisateur n'a pas déjà réservé ce trajet
+        $reservationExiste = Reservation::where('trajet_id', $request->trajet_id)
+            ->where('passager_id', Auth::id())
+            ->exists();
+
+        if ($reservationExiste) {
+            return back()->withErrors([
+                'trajet_id' => 'Vous avez déjà réservé ce trajet.'
+            ]);
+        }
+
+        // Vérifier que le trajet n'est pas complet
+        $reservationsConfirmees = $trajet->reservations()
+            ->where('statut', 'confirmee')
+            ->count();
+
+        if ($reservationsConfirmees >= $trajet->places_disponibles) {
+            return back()->withErrors([
+                'trajet_id' => 'Ce trajet est complet.'
+            ]);
+        }
+
+        // Créer la réservation
         Reservation::create([
             'trajet_id' => $request->trajet_id,
             'passager_id' => Auth::id(),
@@ -65,13 +91,49 @@ class ReservationController extends Controller
     /**
      * Modifier une réservation.
      */
-    public function update(UpdateReservationRequest $request, Reservation $reservation)
-    {
-        $reservation->update($request->validated());
+   public function update(UpdateReservationRequest $request, Reservation $reservation)
+{
+    $nouveauStatut = $request->statut;
 
-        return redirect()->route('reservations.index')
-            ->with('success', 'Réservation mise à jour.');
+    // Interdire de revenir à "en_attente"
+    if (
+        $reservation->statut === 'confirmee' &&
+        $nouveauStatut === 'en_attente'
+    ) {
+        return back()->with(
+            'error',
+            'Une réservation confirmée ne peut pas revenir en attente.'
+        );
     }
+
+    if (
+        $reservation->statut === 'refusee' &&
+        $nouveauStatut === 'en_attente'
+    ) {
+        return back()->with(
+            'error',
+            'Une réservation refusée ne peut pas revenir en attente.'
+        );
+    }
+
+    if (
+        $reservation->statut === 'annulee' &&
+        $nouveauStatut === 'en_attente'
+    ) {
+        return back()->with(
+            'error',
+            'Une réservation annulée ne peut pas revenir en attente.'
+        );
+    }
+
+    $reservation->update([
+        'statut' => $nouveauStatut,
+    ]);
+
+    return redirect()
+        ->route('reservations.index')
+        ->with('success', 'Statut mis à jour avec succès.');
+}
 
     /**
      * Supprimer une réservation.
@@ -81,6 +143,6 @@ class ReservationController extends Controller
         $reservation->delete();
 
         return redirect()->route('reservations.index')
-            ->with('success', 'Réservation supprimée.');
+            ->with('success', 'Réservation supprimée avec succès.');
     }
 }

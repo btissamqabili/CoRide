@@ -10,9 +10,10 @@ class Trajet extends Model
         'conducteur_id',
         'ville_depart',
         'ville_arrivee',
-        'horaire',
-        'places_disponibles',
-        'jours_recurrence',
+        'date_depart',
+        'heure_depart',
+        'nombre_places',
+        'description'
     ];
 
     public function conducteur()

@@ -14,21 +14,13 @@
 
             {{-- Affichage des erreurs --}}
             @if ($errors->any())
-
                 <div class="alert alert-danger">
-
                     <ul class="mb-0">
-
                         @foreach ($errors->all() as $error)
-
                             <li>{{ $error }}</li>
-
                         @endforeach
-
                     </ul>
-
                 </div>
-
             @endif
 
             <form action="{{ route('reservations.update', $reservation) }}" method="POST">
@@ -36,80 +28,78 @@
                 @csrf
                 @method('PUT')
 
+                {{-- Trajet --}}
                 <div class="mb-3">
-
-                    <label class="form-label">
-                        Trajet
-                    </label>
+                    <label class="form-label">Trajet</label>
 
                     <input
                         type="text"
                         class="form-control"
                         value="{{ $reservation->trajet->ville_depart }} → {{ $reservation->trajet->ville_arrivee }}"
                         readonly>
-
                 </div>
 
+                {{-- Passager --}}
                 <div class="mb-3">
-
-                    <label class="form-label">
-                        Passager
-                    </label>
+                    <label class="form-label">Passager</label>
 
                     <input
                         type="text"
                         class="form-control"
                         value="{{ $reservation->passager->name }}"
                         readonly>
-
                 </div>
 
+                {{-- Date --}}
                 <div class="mb-3">
-
-                    <label class="form-label">
-                        Date de réservation
-                    </label>
+                    <label class="form-label">Date de réservation</label>
 
                     <input
                         type="text"
                         class="form-control"
                         value="{{ $reservation->date_reservation }}"
                         readonly>
-
                 </div>
 
+                {{-- Statut --}}
                 <div class="mb-3">
-
-                    <label class="form-label">
+                    <label for="statut" class="form-label">
                         Statut
                     </label>
 
                     <select
+                        id="statut"
                         name="statut"
-                        class="form-select"
+                        class="form-select @error('statut') is-invalid @enderror"
                         required>
 
                         <option value="en_attente"
-                            {{ $reservation->statut == 'en_attente' ? 'selected' : '' }}>
+                            {{ old('statut', $reservation->statut) == 'en_attente' ? 'selected' : '' }}>
                             En attente
                         </option>
 
                         <option value="confirmee"
-                            {{ $reservation->statut == 'confirmee' ? 'selected' : '' }}>
+                            {{ old('statut', $reservation->statut) == 'confirmee' ? 'selected' : '' }}>
                             Confirmée
                         </option>
 
                         <option value="refusee"
-                            {{ $reservation->statut == 'refusee' ? 'selected' : '' }}>
+                            {{ old('statut', $reservation->statut) == 'refusee' ? 'selected' : '' }}>
                             Refusée
                         </option>
 
                         <option value="annulee"
-                            {{ $reservation->statut == 'annulee' ? 'selected' : '' }}>
+                            {{ old('statut', $reservation->statut) == 'annulee' ? 'selected' : '' }}>
                             Annulée
                         </option>
 
                     </select>
+
+                    @error('statut')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
 
                 </div>
 
@@ -120,12 +110,8 @@
                         Retour
                     </a>
 
-                    <button
-                        type="submit"
-                        class="btn btn-warning">
-
+                    <button type="submit" class="btn btn-warning">
                         Mettre à jour
-
                     </button>
 
                 </div>
